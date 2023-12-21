@@ -175,6 +175,7 @@ const Minter: React.FC = () => {
       </div>
 
       <span className="mt-6 w-[400px] text-left font-bold text-lg">{`日志(本次已铸造+${count})`}</span>
+      <p className="text-xs text-left w-[400px]  mt-2 mb-2 text-gray-400">一开始连接比较慢，铸造失败不扣币。</p>
       <div className="px-4 py-2 whitespace-pre border border-black w-[400px] h-[400px] overflow-auto">
         {logs.join("\n")}
       </div>
