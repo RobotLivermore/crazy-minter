@@ -22,6 +22,11 @@ const MinterNav = () => {
           </Link>
         </li>
         <li>
+          <Link className="underline" href="/dota">
+            dota
+          </Link>
+        </li>
+        <li>
           <Link className="underline" href="/avascriptions">
             Avascriptions
           </Link>
