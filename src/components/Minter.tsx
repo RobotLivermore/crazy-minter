@@ -1,117 +1,76 @@
 "use client";
 
 import React, { useCallback, useRef, useState } from "react";
-import {
-  restoreWallet,
-  getSigningCosmWasmClient,
-  getQueryClient,
-} from "@sei-js/core";
-import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate";
-
-import { calculateFee } from "@cosmjs/stargate";
-
-// const RPC_URL = "https://sei-rpc.polkachu.com/";
-const REST_URL = "https://sei-api.polkachu.com/";
-
-const RPC_URL_2 = "https://sei-rpc.brocha.in/";
-// const RPC_URL_3 = "https://rpc.sei-apis.com/";
-// const RPC_URL_4 = "https://sei-m.rpc.n0ok.net/";
-// const RPC_URL_5 = "https://sei-rpc.lavenderfive.com/";
-
-const generateWalletFromMnemonic = async (mnemonic: string) => {
-  const wallet = await restoreWallet(mnemonic, 0);
-  return wallet;
-};
-
-const querySeiBalance = async (address: string) => {
-  const queryClient = await getQueryClient(REST_URL);
-  const result = await queryClient.cosmos.bank.v1beta1.balance({
-    address: address,
-    denom: "usei",
-  });
-  return result.balance;
-};
+import { ethers } from "ethers";
+import { bytesToHex } from "@/utils/bytes";
+import Image from "next/image";
 
 const Minter: React.FC = () => {
-  const [mnemonic, setMnemonic] = useState<string>("");
+  const [privs, setPrivs] = useState<string>("");
   const [isEnd, setIsEnd] = useState<boolean>(false);
   const isEndRef = useRef<boolean>(false);
   isEndRef.current = isEnd;
   const [logs, setLogs] = useState<string[]>([]);
+  const [isView, setIsView] = useState<boolean>(true);
 
-  const mintFn = useCallback(
-    async (client: SigningCosmWasmClient, address: string) => {
-      try {
-        const msg = {
-          p: "sei-20",
-          op: "mint",
-          tick: "EVM Inscription",
-          amt: "1000",
-        };
-        const msg_base64 = btoa(`data:,${JSON.stringify(msg)}`);
-        const fee = calculateFee(100000, "0.13usei");
-        const response = await client.sendTokens(
-          address,
-          address,
-          [{ amount: "1", denom: "usei" }],
-          fee,
-          msg_base64
-        );
-        setLogs((pre) => [
-          ...pre,
-          `铸造完成, txhash: ${response.transactionHash}`,
-        ]);
-      } catch (e) {
-        // sleep 1s
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-      }
-    },
-    []
-  );
-
-  const walletMint = useCallback(async (m: string) => {
-    const wallet = await generateWalletFromMnemonic(m);
-
-    const accounts = await wallet.getAccounts();
-    setLogs((pre) => [...pre, `成功导入钱包: ${accounts[0].address}`]);
-
-    const balance = await querySeiBalance(accounts[0].address);
-    console.log(balance);
-    if (Number(balance.amount) === 0) {
-      setLogs((pre) => [...pre, `账户余额不足`]);
+  const walletMint = useCallback(async (priv: string, idx: number) => {
+    const provider = new ethers.JsonRpcProvider(
+      "https://api.avax.network/ext/bc/C/rpc"
+    );
+    let wallet: ethers.Wallet;
+    try {
+      wallet = new ethers.Wallet(priv, provider);
+      setLogs((pre) => [...pre, `成功导入钱包: ${wallet.address}`]);
+    } catch (e) {
+      setLogs((pre) => [...pre, `第${idx + 1}个私钥错误`]);
       return;
     }
 
-    const signingCosmWasmClient = await getSigningCosmWasmClient(
-      RPC_URL_2,
-      wallet
-    );
+    const balance = await provider.getBalance(wallet.address);
+    setLogs((pre) => [...pre, `钱包余额: ${ethers.formatEther(balance)} AVAX`]);
 
+    // console.log(balance, ethers.formatEther(balance));
+    if (balance.toString() === "0") {
+      setLogs((pre) => [...pre, `账户余额不足`]);
+      return;
+    }
+    const ec = new TextEncoder();
+    const text = ec.encode(
+      `data:,{"p":"asc-20","op":"mint","tick":"dino","amt":"100000000"}`
+    );
+    setLogs((pre) => [...pre, `Mint Hex:${bytesToHex(text)}`]);
     while (true) {
       if (isEndRef.current) {
         setLogs((pre) => [...pre, `暂停铸造`]);
         break;
       }
-      await mintFn(signingCosmWasmClient, accounts[0].address);
-      // await new Promise((resolve) => setTimeout(resolve, 300));
+
+      const tx = await wallet.sendTransaction({
+        to: wallet.address,
+        value: 0,
+        gasLimit: 23000,
+        data: `0x${bytesToHex(text)}`,
+      });
+      setLogs((pre) => [...pre, `铸造完成, txhash: ${tx.hash}`]);
+
+      await new Promise((resolve) => setTimeout(resolve, 300));
     }
-  }, [mintFn])
+  }, []);
 
   const handleMint = async () => {
     setIsEnd(false);
     setLogs((pre) => [...pre, `开始铸造`]);
 
     // 验证助记词
-    if (!mnemonic) {
+    if (!privs) {
       setLogs((pre) => [...pre, `请输入助记词`]);
       return;
     }
-    const walletMnemonics = mnemonic.split(",");
+    const privsList = privs.split(",");
 
-    for (let i = 0; i < walletMnemonics.length; i++) {
-      walletMint(walletMnemonics[i]);
+    for (let i = 0; i < privsList.length; i++) {
+      walletMint(privsList[i], i);
     }
-    
   };
 
   const handleEnd = () => {
@@ -123,12 +82,29 @@ const Minter: React.FC = () => {
     <div className="flex flex-col items-center">
       <h1>EVM Inscription疯狂铸造脚本</h1>
       <p className="text-xs mt-2 text-gray-400">打到账户没钱为止</p>
-      <div>
+      <div className="flex flex-col mt-6">
+        <span
+          className="text-xs rounded-md flex w-6 h-6 justify-center items-center cursor-pointer hover:bg-gray-100"
+          onClick={() => {
+            setIsView((pre) => !pre);
+          }}
+        >
+          {isView ? (
+            <Image src="/icons/eye.svg" width={16} height={16} alt="visible" />
+          ) : (
+            <Image
+              src="/icons/eye-slash.svg"
+              width={16}
+              height={16}
+              alt="visible"
+            />
+          )}
+        </span>
         <textarea
-          className="mt-6 border border-black rounded-xl w-[400px] px-4 py-6 resize-none h-[220px]"
-          placeholder="请输入助记词，比如：jazz bench loan chronic ready pelican travel charge lunar pear detect couch。当有多的账号的时候，用,分割，比如:jazz bench loan chronic ready pelican travel charge lunar pear detect couch,black clay figure average spoil insane hire typical surge still brown object"
-          value={mnemonic}
-          onChange={(e) => setMnemonic(e.target.value)}
+          className="mt-2 border border-black rounded-xl w-[400px] px-4 py-4 resize-none h-[220px]"
+          placeholder="请输入私钥，比如：0f5d3cd02dc0958110ed2fa63c1ac2b3163c6c6c35ccca7cbfda5be42b412023。当有多的账号的时候，用,分割，比如: ef5d3cd02dc0958110ed2fa63c1ac2b3163c6c6c35ccca7cbfda5be42b412023,ba1fb7df7264b8a49f1879a9ab93ee01bef6c2fedf3e6e2a41d35c611d39915d"
+          value={isView ? privs : !privs ? "" : "*************************"}
+          onChange={(e) => setPrivs(e.target.value)}
         />
       </div>
       <div className="flex w-[400px] justify-center space-x-6 mt-4">

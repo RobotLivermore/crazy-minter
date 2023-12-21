@@ -1,3 +1,4 @@
+'use client';
 import Minter from "@/components/Minter";
 import Image from "next/image";
 import Link from "next/link";
@@ -41,8 +42,8 @@ export default function Home() {
                 y1="16.67%"
                 y2="75%"
               >
-                <stop offset="0" stop-color="#37aee2" />
-                <stop offset="1" stop-color="#1e96c8" />
+                <stop offset="0" stopColor="#37aee2" />
+                <stop offset="1" stopColor="#1e96c8" />
               </linearGradient>
               <linearGradient
                 id="b"
@@ -51,8 +52,8 @@ export default function Home() {
                 y1="43.69%"
                 y2="80.24%"
               >
-                <stop offset="0" stop-color="#eff7fc" />
-                <stop offset="1" stop-color="#fff" />
+                <stop offset="0" stopColor="#eff7fc" />
+                <stop offset="1" stopColor="#fff" />
               </linearGradient>
               <circle cx="8" cy="8" fill="url(#a)" r="8" />
               <path
