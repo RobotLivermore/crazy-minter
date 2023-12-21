@@ -17,6 +17,7 @@ import {
 import { BigNumberInBase } from "@injectivelabs/utils";
 // import { BigNumber } from "bignumber.js";
 import Link from "next/link";
+import Button from "../ui/Button";
 
 const network = getNetworkInfo(Network.Mainnet);
 
@@ -199,18 +200,18 @@ const InjsMinter: React.FC = () => {
         />
       </div>
       <div className="flex w-[400px] justify-center space-x-6 mt-4">
-        <button
-          className="border border-black px-4 py-2 rounded-full"
+        <Button
+          text="开始铸造"
+          theme="primary"
+          className="border w-[150px] border-black px-4 py-2 rounded-full"
           onClick={handleMint}
-        >
-          开始铸造
-        </button>
-        <button
-          className="border border-black px-4 py-2 rounded-full"
+        />
+        <Button
+          text="暂停"
+          theme="outline"
+          className="border w-[150px] border-black px-4 py-2 rounded-full"
           onClick={handleEnd}
-        >
-          暂停
-        </button>
+        />
       </div>
 
       <span className="mt-6 w-[400px] text-left">{`日志(本次已铸造+${count})`}</span>

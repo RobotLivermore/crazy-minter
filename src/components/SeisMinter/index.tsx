@@ -9,6 +9,7 @@ import {
 import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate";
 
 import { calculateFee } from "@cosmjs/stargate";
+import Button from "../ui/Button";
 
 // const RPC_URL = "https://sei-rpc.polkachu.com/";
 const REST_URL = "https://sei-api.polkachu.com/";
@@ -69,33 +70,36 @@ const Minter: React.FC = () => {
     []
   );
 
-  const walletMint = useCallback(async (m: string) => {
-    const wallet = await generateWalletFromMnemonic(m);
+  const walletMint = useCallback(
+    async (m: string) => {
+      const wallet = await generateWalletFromMnemonic(m);
 
-    const accounts = await wallet.getAccounts();
-    setLogs((pre) => [...pre, `成功导入钱包: ${accounts[0].address}`]);
+      const accounts = await wallet.getAccounts();
+      setLogs((pre) => [...pre, `成功导入钱包: ${accounts[0].address}`]);
 
-    const balance = await querySeiBalance(accounts[0].address);
-    console.log(balance);
-    if (Number(balance.amount) === 0) {
-      setLogs((pre) => [...pre, `账户余额不足`]);
-      return;
-    }
-
-    const signingCosmWasmClient = await getSigningCosmWasmClient(
-      RPC_URL_2,
-      wallet
-    );
-
-    while (true) {
-      if (isEndRef.current) {
-        setLogs((pre) => [...pre, `暂停铸造`]);
-        break;
+      const balance = await querySeiBalance(accounts[0].address);
+      console.log(balance);
+      if (Number(balance.amount) === 0) {
+        setLogs((pre) => [...pre, `账户余额不足`]);
+        return;
       }
-      await mintFn(signingCosmWasmClient, accounts[0].address);
-      // await new Promise((resolve) => setTimeout(resolve, 300));
-    }
-  }, [mintFn])
+
+      const signingCosmWasmClient = await getSigningCosmWasmClient(
+        RPC_URL_2,
+        wallet
+      );
+
+      while (true) {
+        if (isEndRef.current) {
+          setLogs((pre) => [...pre, `暂停铸造`]);
+          break;
+        }
+        await mintFn(signingCosmWasmClient, accounts[0].address);
+        // await new Promise((resolve) => setTimeout(resolve, 300));
+      }
+    },
+    [mintFn]
+  );
 
   const handleMint = async () => {
     setIsEnd(false);
@@ -111,7 +115,6 @@ const Minter: React.FC = () => {
     for (let i = 0; i < walletMnemonics.length; i++) {
       walletMint(walletMnemonics[i]);
     }
-    
   };
 
   const handleEnd = () => {
@@ -132,18 +135,18 @@ const Minter: React.FC = () => {
         />
       </div>
       <div className="flex w-[400px] justify-center space-x-6 mt-4">
-        <button
-          className="border border-black px-4 py-2 rounded-full"
+        <Button
+          text="开始铸造"
+          theme="primary"
+          className="border w-[150px] border-black px-4 py-2 rounded-full"
           onClick={handleMint}
-        >
-          开始铸造
-        </button>
-        <button
-          className="border border-black px-4 py-2 rounded-full"
+        />
+        <Button
+          text="暂停"
+          theme="outline"
+          className="border w-[150px] border-black px-4 py-2 rounded-full"
           onClick={handleEnd}
-        >
-          暂停
-        </button>
+        />
       </div>
 
       <span className="mt-6 w-[400px] text-left">日志</span>

@@ -7,6 +7,7 @@ import Keyring from "@polkadot/keyring";
 import { KeyringPair } from "@polkadot/keyring/types";
 import { cryptoWaitReady } from "@polkadot/util-crypto";
 import { ApiPromise, WsProvider } from "@polkadot/api";
+import Button from "../ui/Button";
 
 const Minter: React.FC = () => {
   const [privs, setPrivs] = useState<string>("");
@@ -157,25 +158,26 @@ const Minter: React.FC = () => {
           value={isView ? privs : !privs ? "" : "*************************"}
           onChange={(e) => setPrivs(e.target.value)}
         />
-
       </div>
       <div className="flex w-[400px] justify-center space-x-6 mt-4">
-        <button
-          className="border border-black px-4 py-2 rounded-full"
+        <Button
+          text="开始铸造"
+          theme="primary"
+          className="border w-[150px] border-black px-4 py-2 rounded-full"
           onClick={handleMint}
-        >
-          开始铸造
-        </button>
-        <button
-          className="border border-black px-4 py-2 rounded-full"
+        />
+        <Button
+          text="暂停"
+          theme="outline"
+          className="border w-[150px] border-black px-4 py-2 rounded-full"
           onClick={handleEnd}
-        >
-          暂停
-        </button>
+        />
       </div>
 
       <span className="mt-6 w-[400px] text-left font-bold text-lg">{`日志(本次已铸造+${count})`}</span>
-      <p className="text-xs text-left w-[400px]  mt-2 mb-2 text-gray-400">一开始连接比较慢，铸造失败不扣币。</p>
+      <p className="text-xs text-left w-[400px]  mt-2 mb-2 text-gray-400">
+        一开始连接比较慢，铸造失败不扣币。
+      </p>
       <div className="px-4 py-2 whitespace-pre border border-black w-[400px] h-[400px] overflow-auto">
         {logs.join("\n")}
       </div>

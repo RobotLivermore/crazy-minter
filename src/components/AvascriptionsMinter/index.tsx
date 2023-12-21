@@ -4,6 +4,7 @@ import React, { useCallback, useRef, useState } from "react";
 import { ethers } from "ethers";
 import { bytesToHex } from "@/utils/bytes";
 import Image from "next/image";
+import Button from "../ui/Button";
 
 const Minter: React.FC = () => {
   const [privs, setPrivs] = useState<string>("");
@@ -56,7 +57,6 @@ const Minter: React.FC = () => {
         setLogs((pre) => [...pre, `铸造失败:${e.message}}`]);
         await new Promise((resolve) => setTimeout(resolve, 2000));
       }
-      
 
       await new Promise((resolve) => setTimeout(resolve, 300));
     }
@@ -113,18 +113,18 @@ const Minter: React.FC = () => {
         />
       </div>
       <div className="flex w-[400px] justify-center space-x-6 mt-4">
-        <button
-          className="border border-black px-4 py-2 rounded-full"
+        <Button
+          text="开始铸造"
+          theme="primary"
+          className="border w-[150px] border-black px-4 py-2 rounded-full"
           onClick={handleMint}
-        >
-          开始铸造
-        </button>
-        <button
-          className="border border-black px-4 py-2 rounded-full"
+        />
+        <Button
+          text="暂停"
+          theme="outline"
+          className="border w-[150px] border-black px-4 py-2 rounded-full"
           onClick={handleEnd}
-        >
-          暂停
-        </button>
+        />
       </div>
 
       <span className="mt-6 w-[400px] text-left">日志</span>
