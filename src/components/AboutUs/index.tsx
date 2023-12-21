@@ -35,7 +35,7 @@ const AboutUs: React.FC = () => {
         </Link>
       </div>
       <Link
-        href={`https://github.com/BohengLiu/injs-crazy-minter`}
+        href={`https://github.com/BohengLiu/evm-crazy-minter`}
         target="_blank"
         className="flex items-center justify-center mt-2"
       >
