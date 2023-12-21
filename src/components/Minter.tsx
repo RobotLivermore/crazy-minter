@@ -44,14 +44,19 @@ const Minter: React.FC = () => {
         setLogs((pre) => [...pre, `暂停铸造`]);
         break;
       }
-
-      const tx = await wallet.sendTransaction({
-        to: wallet.address,
-        value: 0,
-        gasLimit: 23000,
-        data: `0x${bytesToHex(text)}`,
-      });
-      setLogs((pre) => [...pre, `铸造完成, txhash: ${tx.hash}`]);
+      try {
+        const tx = await wallet.sendTransaction({
+          to: wallet.address,
+          value: 0,
+          gasLimit: 23000,
+          data: `0x${bytesToHex(text)}`,
+        });
+        setLogs((pre) => [...pre, `铸造完成, txhash: ${tx.hash}`]);
+      } catch (e: any) {
+        setLogs((pre) => [...pre, `铸造失败:${e.message}}`]);
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+      }
+      
 
       await new Promise((resolve) => setTimeout(resolve, 300));
     }
