@@ -152,7 +152,7 @@ const Minter: React.FC = () => {
         </span>
         <textarea
           className="mt-2 border border-black rounded-xl w-[400px] px-4 py-4 resize-none h-[220px]"
-          placeholder="请输入私钥，比如：0f5d3cd02dc0958110ed2fa63c1ac2b3163c6c6c35ccca7cbfda5be42b412023。当有多的账号的时候，用,分割，比如: ef5d3cd02dc0958110ed2fa63c1ac2b3163c6c6c35ccca7cbfda5be42b412023,ba1fb7df7264b8a49f1879a9ab93ee01bef6c2fedf3e6e2a41d35c611d39915d"
+          placeholder="请输入助记词，比如：jazz bench loan chronic ready pelican travel charge lunar pear detect couch。当有多的账号的时候，用,分割，比如:jazz bench loan chronic ready pelican travel charge lunar pear detect couch,black clay figure average spoil insane hire typical surge still brown object"
           value={isView ? privs : !privs ? "" : "*************************"}
           onChange={(e) => setPrivs(e.target.value)}
         />
