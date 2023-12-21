@@ -31,6 +31,7 @@ const Minter: React.FC = () => {
       setLogs((pre) => [...pre, `第${idx + 1}个私钥错误`]);
       return;
     }
+    setLogs((pre) => [...pre, `开始连接网络.......`]);
 
     // 连接到波卡节点
     const provider = new WsProvider("wss://rpc.polkadot.io");
@@ -156,6 +157,7 @@ const Minter: React.FC = () => {
           value={isView ? privs : !privs ? "" : "*************************"}
           onChange={(e) => setPrivs(e.target.value)}
         />
+
       </div>
       <div className="flex w-[400px] justify-center space-x-6 mt-4">
         <button
@@ -172,7 +174,7 @@ const Minter: React.FC = () => {
         </button>
       </div>
 
-      <span className="mt-6 w-[400px] text-left">{`日志(本次已铸造+${count})`}</span>
+      <span className="mt-6 w-[400px] text-left font-bold text-lg">{`日志(本次已铸造+${count})`}</span>
       <div className="px-4 py-2 whitespace-pre border border-black w-[400px] h-[400px] overflow-auto">
         {logs.join("\n")}
       </div>
