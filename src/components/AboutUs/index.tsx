@@ -4,10 +4,10 @@ import Link from "next/link";
 
 const AboutUs: React.FC = () => {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col w-full max-w-[400px] basis-[400px] py-8">
       <h1 className="text-4xl font-bold">欢迎加入科学家的队伍</h1>
       <p className="text-xs mt-2 text-gray-400">进群免费领工具</p>
-      <Image src="/shareQrcode.jpeg" width={360} alt="" height={400} />
+      <Image src="/shareQrcode.png" width={360} alt="" height={400} />
       <div className="flex justify-center mb-2 space-x-2">
         <Link
           href={`https://twitter.com/InscriptionBot`}
