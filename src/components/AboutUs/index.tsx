@@ -8,7 +8,7 @@ const AboutUs: React.FC = () => {
       <h1 className="text-4xl font-bold">欢迎加入科学家的队伍</h1>
       <p className="text-xs mt-2 text-gray-400">进群免费领工具</p>
       <Image src="/shareQrcode.png" width={360} alt="" height={400} />
-      <div className="flex justify-center mb-2 space-x-2">
+      <div className="flex justify-center mb-2">
         <Link
           href={`https://twitter.com/InscriptionBot`}
           target="_blank"
@@ -21,7 +21,7 @@ const AboutUs: React.FC = () => {
             alt="twitter"
           />
         </Link>
-        <Link
+        {/* <Link
           href={`https://t.me/+hYSsEN9xutMwZTRl`}
           className="w-6 h-6"
           target="_blank"
@@ -32,7 +32,7 @@ const AboutUs: React.FC = () => {
             height={24}
             alt="twitter"
           />
-        </Link>
+        </Link> */}
       </div>
       <Link
         href={`https://github.com/robot-factory/evm-crazy-minter`}
