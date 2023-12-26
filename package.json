@@ -9,12 +9,16 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ant-design/cssinjs": "^1.18.2",
+    "@ant-design/icons": "^5.2.6",
     "@injectivelabs/networks": "^1.14.4",
     "@injectivelabs/sdk-ts": "^1.14.4",
     "@polkadot/api": "^10.11.2",
     "@polkadot/keyring": "^12.6.2",
     "@polkadot/util-crypto": "^12.6.2",
     "@sei-js/core": "^3.1.2",
+    "antd": "^5.12.5",
+    "bignumber.js": "^9.1.2",
     "ethers": "^6.9.0",
     "next": "14.0.4",
     "react": "^18",
