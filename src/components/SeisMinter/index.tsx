@@ -46,7 +46,10 @@ const Minter: React.FC = () => {
           amt: '1000',
         }
         const msg_base64 = btoa(`data:,${JSON.stringify(msg)}`)
-        const fee = calculateFee(100000, '0.13usei')
+        const fee = {
+          amount: [{ amount: '8243', denom: 'usei' }],
+          gas: '82426',
+        }
         const response = await client.sendTokens(
           address,
           address,
@@ -58,7 +61,8 @@ const Minter: React.FC = () => {
           ...pre,
           `铸造完成, txhash: ${response.transactionHash}`,
         ])
-        setCounts((pre) => ({ ...pre, [address]: pre[address] + 1 }))
+        console.log(address)
+        setCounts((pre) => ({ ...pre, [address]: (pre[address] || 0) + 1 }))
       } catch (e) {
         // sleep 1s
         await new Promise((resolve) => setTimeout(resolve, 1000))
