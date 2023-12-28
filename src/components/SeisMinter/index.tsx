@@ -8,7 +8,6 @@ import {
   DirectSecp256k1Wallet,
 } from '@cosmjs/proto-signing'
 
-import { calculateFee } from '@cosmjs/stargate'
 import { Table, Popconfirm, Button } from 'antd'
 import useWalletsV1, { WalletV1 } from '@/hooks/useWalletsV1'
 import { ellipsisText, formatBalance } from '@/utils/format'

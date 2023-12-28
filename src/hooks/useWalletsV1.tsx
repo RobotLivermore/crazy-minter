@@ -29,12 +29,12 @@ const useWalletsV1 = () => {
   const importWallet = (genFn: (_priv: string) => Promise<WalletV1 | null>) => {
     modal.confirm({
       maskClosable: true,
-      title: 'Import wallet',
+      title: '导入钱包',
       icon: <WalletOutlined />,
       width: 600,
       content: (
         <div className="w-[600px]">
-          <p>Please enter your mnemonic or private key</p>
+          <p>请输入你的助记词或私钥</p>
           <Input.TextArea
             rows={4}
             placeholder={inputWalletPlaceholder}
